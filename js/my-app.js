@@ -1,42 +1,53 @@
-var myApp = new Framework7({
-	smartSelect: {
-		pageTitle: 'Select Option',
-		openIn: 'popup',
-	  },
-	  view: {
-		iosDynamicNavbar: false,
-		xhrCache: false,
-	  }
-});
+// Initialize your app
+var myApp = new Framework7();
 
+// Export selectors engine
 var $$ = Dom7;
 
+// Add view
+var mainView = myApp.addView('.view-main', {
+    // Because we use fixed-through navbar we can enable dynamic navbar
+    dynamicNavbar: true
+});
 
+// Callbacks to run specific code for specific pages, for example for About page:
+myApp.onPageInit('about', function (page) {
+    // run createContentPage func after link was clicked
+    $$('.create-page').on('click', function () {
+        createContentPage();
+    });
+});
 
+myApp.onPageInit('test', function (page) {
+	// run createContentPage func after link was clicked
+	$('.select2').select2();
+});
 
-
-// var mainView = myApp.addView('.view-main', {
-//     dynamicNavbar: true
-// });
-// var mainView = myApp.addView('.view-main', {
-//     swipePanel: 'left'
-// });
-var view = myApp.views.create('.view-main', {
-	url: '/'
-  })
-
-  
-
-var smartSelect = myApp.smartSelect.create({ el:'.smart-select',
-searchbar:true,
-on: {
-    opened: function () {
-	  console.log('Smart select opened');
-	  var $smart_select_el = $$('.smart-select-page').find('input[type=search]');
-		$$(document).on('input',$smart_select_el,function(){
-			// $$('.car').append('<option value="deewai">Deewai</option>')
-			smartSelect.renderItem({text:'Deewai',value:'deewai',checkbox: false,className: "",disabled: false,id: 1521493459500,inputName: "radio-1521493459500",inputType: "radio",radio: true,selected: false},0);
-			// myApp.smartSelect.addOption ('.smart-select', '<option value="deewai">Deewai</option>', 0)
-		})
-    }
-  } })
+// Generate dynamic page
+var dynamicPageIndex = 0;
+function createContentPage() {
+	mainView.router.loadContent(
+        '<!-- Top Navbar-->' +
+        '<div class="navbar">' +
+        '  <div class="navbar-inner">' +
+        '    <div class="left"><a href="#" class="back link"><i class="icon icon-back"></i><span>Back</span></a></div>' +
+        '    <div class="center sliding">Dynamic Page ' + (++dynamicPageIndex) + '</div>' +
+        '  </div>' +
+        '</div>' +
+        '<div class="pages">' +
+        '  <!-- Page, data-page contains page name-->' +
+        '  <div data-page="dynamic-pages" class="page">' +
+        '    <!-- Scrollable page content-->' +
+        '    <div class="page-content">' +
+        '      <div class="content-block">' +
+        '        <div class="content-block-inner">' +
+        '          <p>Here is a dynamic page created on ' + new Date() + ' !</p>' +
+        '          <p>Go <a href="#" class="back">back</a> or go to <a href="services.html">Services</a>.</p>' +
+        '        </div>' +
+        '      </div>' +
+        '    </div>' +
+        '  </div>' +
+        '</div>'
+    );
+	return;
+}
